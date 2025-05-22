@@ -1,41 +1,29 @@
 <?php
-session_start();
-include "db.php";
-
+include "includes/db.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
-    $confirm = $_POST['confirm'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // Simple validation
-    if ($password !== $confirm) {
-        echo "Passwords do not match!";
-    } else {
-        // Check if username exists
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-
-        if ($stmt->rowCount() > 0) {
-            echo "Username already taken!";
-        } else {
-            // Hash password and store
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-            $stmt->execute([$username, $hash]);
-
-            echo "Registration successful! <a href='login.php'>Login here</a>";
-            exit();
-        }
-    }
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $username, $email, $password);
+    $stmt->execute();
+    echo "Registered successfully! <a href='login.php'>Login</a>";
 }
 ?>
-
-<form method="POST">
-    <h2>Register</h2>
-    <input name="username" placeholder="Username" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
-    <input type="password" name="confirm" placeholder="Confirm Password" required><br>
-    <button>Register</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST">
+    Username: <input name="username"><br>
+    Email: <input name="email"><br>
+    Password: <input type="password" name="password"><br>
+    <input type="submit" value="Register">
 </form>
-
-<p>Already have an account? <a href="login.php">Login</a></p>
+</body>
+</html>

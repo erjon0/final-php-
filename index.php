@@ -1,80 +1,97 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-include "db.php";
-
-    if (isset($_GET['channel_id'])) {
-        $_SESSION['channel_id'] = $_GET['channel_id'];
-}
-
-
-if (!isset($_SESSION['channel_id'])) {
-        $_SESSION['channel_id'] = 1;
-}
 ?>
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Discord Clone</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Exchange</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1D1616;
+            margin: 0;
+            padding: 0;
+            color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(29, 22, 22, 0.9);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid #8E1616;
+        }
+        
+        h1 {
+            color: #D84040;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 2px solid #8E1616;
+            padding-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            background-color: #8E1616;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            border: 1px solid #D84040;
+        }
+        
+        .nav-links a:hover {
+            background-color: #D84040;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .welcome-message {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 30px;
+            color: #ccc;
+            padding: 15px;
+            background-color: rgba(142, 22, 22, 0.2);
+            border-radius: 5px;
+            border-left: 4px solid #D84040;
+        }
+    </style>
 </head>
 <body>
-    <div class="chat-box">
-        <div id="messages"></div>
-        <input type="text" id="message" placeholder="Type a message">
-        <button onclick="sendMessage()">Send</button>
+    <div class="container" style="margin-top: 50px;">
+        <h1>Welcome to Homework Exchange</h1>
+        
+        <div class="nav-links">
+            <?php if (!isset($_SESSION['user_id'])): ?>
+                <a href='login.php'>Login</a>
+                <a href='register.php'>Register</a>
+            <?php else: ?>
+                <a href='upload.php'>Upload Homework</a>
+                <a href='dashboard.php'>Dashboard</a>
+                <a href='logout.php'>Logout</a>
+            <?php endif; ?>
+        </div>
+        
+        <div class="welcome-message">
+            <?php echo isset($_SESSION['user_id']) ? "Hello! Ready to exchange some homework?" : "Please login or register to get started"; ?>
+        </div>
     </div>
-    <div class="user-info">
-        <p>Logged in as: <?php echo htmlspecialchars($_SESSION['username']); ?></p>
-        <a href="logout.php">Logout</a>
-    <script>
-        function fetchMessages() {
-            fetch('fetch_messages.php?channel_id=<?php echo $_SESSION['channel_id']; ?>')
-                .then(res => res.text())
-                .then(data => {
-                    document.getElementById('messages').innerHTML = data;
-                });
-        }
-        <form action="manage_channels.php" method="POST">
-    <input name="new_channel" placeholder="New channel" required>
-    <button>Create</button>
-</form>
-
-<ul>
-<?php
-foreach ($channels as $ch) {
-    $active = ($_SESSION['channel_id'] == $ch['id']) ? "style='font-weight:bold'" : "";
-    echo "<li>
-        <a href='?channel_id={$ch['id']}' $active># {$ch['name']}</a>";
-
-    if ($ch['created_by'] == $_SESSION['user_id']) {
-        echo " <a href='manage_channels.php?delete={$ch['id']}' style='color:red;'>[delete]</a>";
-    }
-
-    echo "</li>";
-}
-?>
-</ul>   
-</div>
-    function sendMessage() {
-        const msg = document.getElementById('message').value;
-        fetch('send_message.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'message=' + encodeURIComponent(msg) + '&channel_id=<?php echo $_SESSION['channel_id']; ?>'
-        }).then(() => {
-            document.getElementById('message').value = '';
-            fetchMessages();
-        });
-    }
-        setInterval(fetchMessages, 1000); // polling every second
-        fetchMessages();
-    </script>
 </body>
 </html>
