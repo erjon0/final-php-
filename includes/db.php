@@ -1,10 +1,13 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "homework_exchange";
+$servername = "localhost";
+$username = "homework_user";
+$password = "secure_password_123";
+$dbname = "homework_exchange";
 
-$conn = new mysqli($host, $user, $pass, $db);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
