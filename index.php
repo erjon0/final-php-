@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 ?>
 
 <!DOCTYPE html>
@@ -64,6 +63,10 @@ session_start();
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
         }
         
+        .nav-links a.active {
+            background-color: #D84040;
+        }
+        
         .welcome-message {
             text-align: center;
             font-size: 1.2em;
@@ -75,7 +78,6 @@ session_start();
             border-left: 4px solid #D84040;
         }
 
-        /* New styles for homework list */
         .homework-list {
             margin-top: 40px;
             max-width: 800px;
@@ -110,7 +112,6 @@ session_start();
             color: #b0b0b0;
         }
 
-        /* Modal styles */
         #modal {
             display: none;
             position: fixed;
@@ -151,6 +152,7 @@ session_start();
         <h1>Welcome to Homework Exchange</h1>
         
         <div class="nav-links">
+            <a href='index.php' class="active">Home</a>
             <?php if (!isset($_SESSION['user_id'])): ?>
                 <a href='login.php'>Login</a>
                 <a href='register.php'>Register</a>
@@ -166,12 +168,10 @@ session_start();
             <?php echo isset($_SESSION['user_id']) ? "Hello! Ready to exchange some homework?" : "Please login or register to get started"; ?>
         </div>
 
-        <!-- Added example homework section -->
         <div class="homework-list">
-            <h2>Example Homework Uploads</h2>
+            <h2>Featured Homework Uploads</h2>
 
             <?php
-            // Example static data - replace with your database queries later
             $exampleHomeworks = [
                 [
                     'title' => 'Math Algebra Practice',
@@ -198,14 +198,14 @@ session_start();
                     <p class="upload-date">Uploaded on: <?php echo date('F j, Y, g:i a', strtotime($hw['uploaded_at'])); ?></p>
                     <div class="nav-links" style="margin-top:10px;">
                         <?php if (!isset($_SESSION['user_id'])): ?>
-                            <a href='login.php'>Login</a>
+                            <a href='login.php'>Login to View</a>
                             <a href='register.php'>Register</a>
                         <?php else: ?>
                             <a href="#" class="view-btn" 
                                data-title="<?php echo htmlspecialchars($hw['title']); ?>"
                                data-description="<?php echo htmlspecialchars($hw['description']); ?>"
                                data-date="<?php echo date('F j, Y, g:i a', strtotime($hw['uploaded_at'])); ?>"
-                            >View</a>
+                            >View Details</a>
                         <?php endif; ?>
                     </div>
                 </div>
