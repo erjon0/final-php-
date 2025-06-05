@@ -210,7 +210,7 @@ $username = $_SESSION['username'] ?? 'User';
         <div class="quick-actions">
             <a href="upload.php" class="quick-action-btn">📤 Upload New</a>
             <a href="browse.php" class="quick-action-btn">🔍 Browse All</a>
-            <a href="profile.php" class="quick-action-btn">👤 Edit Profile</a>
+            <a href="edit-profile.php" class="quick-action-btn">👤 Edit Profile</a>
         </div>
 
         <div class="recent-activity">
